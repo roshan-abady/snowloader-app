@@ -1,0 +1,1 @@
+streamlit run snowloader_app.py

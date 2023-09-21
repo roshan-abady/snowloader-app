@@ -6,7 +6,7 @@ Snowloader is a Python application that allows you to load CSV or Excel files in
 
 To install the required dependencies, run the following command:
 
-shell pip install -r requirements.txt
+pip install -r requirements.txt
 
 ## Usage
 

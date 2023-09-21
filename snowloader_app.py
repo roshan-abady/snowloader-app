@@ -14,7 +14,7 @@ st.write(
 )
 # Initialize session state for form visibility
 if "show_form" not in st.session_state:
-    st.session_state.show_form = True
+    st.session_state.show_form = False
 
 # Add a button to toggle the visibility of the form
 if st.button("Snowflake Connection Details"):

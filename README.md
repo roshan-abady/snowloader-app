@@ -1,6 +1,6 @@
-# Snowloader
+# Snowloader_app
 
-Snowloader is a Python application that allows you to load CSV or Excel files into Snowflake.
+Snowloader_app is a Python application that allows you to load CSV or Excel files into Snowflake.
 
 ## Installation
 

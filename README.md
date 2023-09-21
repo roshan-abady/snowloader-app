@@ -32,7 +32,6 @@ The Snowflake connection details can be configured in the `snowflake_config.ini`
 
 ![Alt text](image.png)
 
-![Alt text](image-2.png)
 
 ## License
 

@@ -1,6 +1,5 @@
 toml
 tomlkit
-getpass
 pandas
 streamlit
 snowflake-connector-python

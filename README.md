@@ -6,15 +6,7 @@ Snowloader is a Python application that allows you to load CSV or Excel files in
 
 To install the required dependencies, run the following command:
 
-shell pip install -r requirements.txt
-
-## Usage
-
-1. Drag and drop the CSV or Excel file you want to load into Snowflake, or select it using the "Browse files" button.
-2. Fill in the Snowflake connection details.
-3. Click the "Save" button to save the connection details.
-4. Choose a CSV or Excel file to upload.
-5. Enter a table name and click the "Upload to Snowflake" button.
+pip install -r requirements.txt
 
 ## Configuration
 
@@ -26,6 +18,21 @@ The Snowflake connection details can be configured in the `snowflake_config.ini`
 - Warehouse: Your Snowflake warehouse.
 - Database: Your Snowflake database.
 - Schema: Your Snowflake schema.
+
+![Alt text](image-1.png)
+
+
+## Usage
+
+1. Drag and drop the CSV or Excel file you want to load into Snowflake, or select it using the "Browse files" button.
+2. Fill in the Snowflake connection details.
+3. Click the "Save" button to save the connection details.
+4. Choose a CSV or Excel file to upload.
+5. Enter a table name and click the "Upload to Snowflake" button.
+
+![Alt text](image.png)
+
+![Alt text](image-2.png)
 
 ## License
 

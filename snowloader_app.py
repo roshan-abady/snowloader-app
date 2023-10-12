@@ -1,10 +1,13 @@
 import os
 import toml
 import getpass
+import threading
 import pandas as pd
 import streamlit as st
 import snowflake.snowpark as snowpark
 from snowflake.snowpark import Session
+import warnings
+warnings.filterwarnings('ignore', category=FutureWarning, module='pyarrow.pandas_compat')
 
 st.title("Snowloader")
 st.write(
@@ -68,6 +71,7 @@ if st.session_state.show_form:
             except Exception as e:
                 st.error(f"An error occurred while saving the configuration: {e}")
 
+
 try:
     # Setup Snowflake connection
     if "Snowflake" in config:
@@ -78,18 +82,32 @@ try:
             "warehouse": config["Snowflake"].get("warehouse"),
             "database": config["Snowflake"].get("database"),
             "schema": config["Snowflake"].get("schema"),
-            "authenticator": "externalbrowser",
-        }
+            "authenticator": config["Snowflake"].get("authenticator"),
+            "CLIENT_SESSION_KEEP_ALIVE": config["Snowflake"].get("client_session_keep_alive")
+            }
 except Exception as e:
     st.error(f"An error occurred while setting up the Snowflake connection: {e}")
 
 
+def snowflake_upload_operation(table_name, df, snowflake_config, results):
+    try:
+        print("Starting snowflake_upload_operation")  # Debugging print statement
+        session = Session.builder.configs(snowflake_config).create()
+        tables = session.sql(f"SHOW TABLES LIKE '{table_name}' IN SCHEMA {snowflake_config['schema']}").collect()
+
+        if tables:  # If table already exists
+            results["exists"] = True
+        else:  # If table does not exist
+            session.write_pandas(df, table_name, auto_create_table=True, overwrite=True)
+            results["success"] = True
+        print("Completed snowflake_upload_operation")  # Debugging print statement
+    except Exception as e:
+        results["error"] = str(e)
+
 with col2:
     try:
         # Streamlit UI for file upload
-        uploaded_file = st.file_uploader(
-            "Choose a CSV or Excel file", type=["csv", "xlsx"]
-        )
+        uploaded_file = st.file_uploader("Choose a CSV or Excel file", type=["csv", "xlsx"])
 
         if uploaded_file:
             file_type = uploaded_file.name.split(".")[-1]
@@ -97,14 +115,9 @@ with col2:
             # Check for supported file types
             if file_type not in ["csv", "xlsx"]:
                 st.error("File type not supported.")
-                proceed = False  # Set flag to False
 
-            default_table_name = uploaded_file.name.split(".")[
-                0
-            ]  # Default table name is the file name without extension
-            table_name = st.text_input(
-                "Table Name:", default_table_name
-            )  # Editable text box for table name
+            default_table_name = uploaded_file.name.split(".")[0]
+            table_name = st.text_input("Table Name:", default_table_name)
 
             if file_type == "csv":
                 df = pd.read_csv(uploaded_file)
@@ -114,15 +127,24 @@ with col2:
             st.write("Preview of Data:")
             st.write(df.head())
 
-            # Upload to Snowflake
             if st.button("Upload to Snowflake"):
-                if table_name:  # Check if table_name is not empty
-                    session = Session.builder.configs(snowflake_config).create()
-                    snowparkDf = session.write_pandas(
-                        df, table_name, auto_create_table=True, overwrite=True
-                    )
+                if table_name:
+                    print("Upload to Snowflake button pressed")  # Debugging print statement                
+                    results = {"exists": False, "success": False, "error": None}
+                    thread = threading.Thread(target=snowflake_upload_operation, args=(table_name, df, snowflake_config, results))
+                    thread.start()
+                    thread.join()
+                    if results["error"]:
+                        st.error(f"An error occurred: {results['error']}")
+                    # elif results[["name 'table_name' is not defined"]]:
+                    #     st.warning("Please enter a table name.")
+                    elif results["exists"]:
+                        if "confirmed_overwrite" not in st.session_state:
+                            if st.button("Table exists! If you want to overwrite, click here, otherwise change the file's name."):
+                                st.session_state.confirmed_overwrite = True
+                                st.success(f"Uploaded data to Snowflake table {table_name}.")
+                if results["success"]:
                     st.success(f"Uploaded data to Snowflake table {table_name}.")
-                else:
-                    st.error("Table name is required.")
+            
     except Exception as e:
         st.error(f"An error occurred: {e}")

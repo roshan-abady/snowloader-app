@@ -107,13 +107,13 @@ def snowflake_upload_operation(table_name, df, snowflake_config, results):
 with col2:
     try:
         # Streamlit UI for file upload
-        uploaded_file = st.file_uploader("Choose a CSV or Excel file", type=["csv", "xlsx"])
+        uploaded_file = st.file_uploader("Choose a CSV or Excel file", type=["csv"])
 
         if uploaded_file:
             file_type = uploaded_file.name.split(".")[-1]
 
             # Check for supported file types
-            if file_type not in ["csv", "xlsx"]:
+            if file_type not in ["csv"]:
                 st.error("File type not supported.")
 
             default_table_name = uploaded_file.name.split(".")[0]
@@ -121,8 +121,8 @@ with col2:
 
             if file_type == "csv":
                 df = pd.read_csv(uploaded_file)
-            elif file_type == "xlsx":
-                df = pd.read_excel(uploaded_file)
+            else:
+                st.error("File type not supported.")
 
             st.write("Preview of Data:")
             st.write(df.head())

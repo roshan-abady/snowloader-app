@@ -121,8 +121,6 @@ with col2:
 
             if file_type == "csv":
                 df = pd.read_csv(uploaded_file)
-            else:
-                st.error("File type not supported.")
 
             st.write("Preview of Data:")
             st.write(df.head())

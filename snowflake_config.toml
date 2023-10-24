@@ -1,8 +1,0 @@
-[Snowflake]
-account = "bu20658.ap-southeast-2"
-user = ""
-role = "OPERATIONS_ANALYTICS_TRANSFORM_RUNNER_TEST"
-warehouse = "OPERATIONS_ANALYTICS_WAREHOUSE_TEST"
-database = "OPERATIONS_ANALYTICS"
-schema = "TEST"
-authenticator = "externalbrowser"

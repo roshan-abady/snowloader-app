@@ -10,28 +10,16 @@ pip install -r requirements.txt
 
 ## Configuration
 
-The Snowflake connection details can be configured in the `snowflake_config.ini` file. Make sure to update the following values:
-
-- Account: Your Snowflake account ID.
-- User: Your Snowflake username.
-- Role: Your Snowflake role.
-- Warehouse: Your Snowflake warehouse.
-- Database: Your Snowflake database.
-- Schema: Your Snowflake schema.
-
-![Alt text](image-1.png)
-
+No configuration is required.
 
 ## Usage
 
 1. Drag and drop the CSV or Excel file you want to load into Snowflake, or select it using the "Browse files" button.
-2. Fill in the Snowflake connection details.
-3. Click the "Save" button to save the connection details.
-4. Choose a CSV or Excel file to upload.
-5. Enter a table name and click the "Upload to Snowflake" button.
+2. Choose a CSV or Excel file to upload.
+3. Modify the table name and click the "Upload to Snowflake" button.
+4. If the table name already exists, you'll be prompted to choose whether to overwrite the table or update the table name.
 
 ![Alt text](image.png)
-
 
 ## License
 
